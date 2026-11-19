@@ -1,0 +1,65 @@
+# PWA（ブラウザ版）を GitHub Pages で公開する。
+#
+# 初回だけ：GitHub のリポジトリ画面で Settings → Pages → Source を「GitHub Actions」にする。
+# 以降は main に push するたびに、型チェック → テスト → ビルド → 公開 を自動で行う。
+# 公開先：https://<ユーザー名>.github.io/<リポジトリ名>/
+name: Deploy PWA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck and test
+        run: |
+          npm run typecheck
+          npm test
+
+      # 公開先のパス（/リポジトリ名）を設定してビルド。
+      # リポジトリ名が「ユーザー名.github.io」のときは、ルート（/）で公開されるのでパスは付けない
+      - name: Build PWA
+        run: |
+          REPO="${{ github.event.repository.name }}"
+          if [[ "$REPO" == *.github.io ]]; then export EXPO_BASE_URL=""; else export EXPO_BASE_URL="/$REPO"; fi
+          echo "base path: '${EXPO_BASE_URL}'"
+          npm run build:pwa
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

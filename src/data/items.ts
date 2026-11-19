@@ -1,0 +1,136 @@
+import type { ItemData, Rarity } from '../core/types';
+
+/**
+ * アイテムの一覧。
+ * 新しいアイテムを追加するときは、この配列に1件足すだけでよい（id は重複させない）。
+ */
+export const ITEMS: readonly ItemData[] = [
+  {
+    id: 'mysterious_stone',
+    name: '謎の石',
+    description: 'ただの石。たぶん。',
+    rarity: 'N',
+    icon: '🪨',
+    sellPrice: 1,
+    usable: false,
+    sellable: true,
+  },
+  {
+    id: 'receipt',
+    name: 'コンビニのレシート',
+    description: '何を買ったのか思い出せない。',
+    rarity: 'N',
+    icon: '🧾',
+    sellPrice: 0,
+    usable: false,
+    sellable: false,
+  },
+  {
+    id: 'rubber_duck',
+    name: 'アヒルのおもちゃ',
+    description: 'お風呂に浮かべると、少しだけ偉くなった気がする。',
+    rarity: 'N',
+    icon: '🦆',
+    sellPrice: 50,
+    usable: false,
+    sellable: true,
+  },
+  {
+    id: 'mystery_drink',
+    name: '謎のドリンク',
+    description: '色が毎回ちがう。味もちがう。',
+    rarity: 'N',
+    icon: '🧃',
+    sellPrice: 100,
+    usable: true,
+    sellable: true,
+    useEffect: { experience: 30, message: 'なんだか元気が出た。経験値 +30' },
+  },
+  {
+    id: 'lost_lottery',
+    name: '外れた宝くじ',
+    description: '番号が1つずつずれている。惜しい。',
+    rarity: 'N',
+    icon: '🎫',
+    sellPrice: 0,
+    usable: false,
+    sellable: false,
+  },
+  {
+    id: 'four_leaf_clover',
+    name: '四つ葉のクローバー',
+    description: '持っていると運が良くなる、という話がある。',
+    rarity: 'R',
+    icon: '🍀',
+    sellPrice: 300,
+    usable: true,
+    sellable: true,
+    useEffect: { experience: 50, message: '運が良くなった気がする。経験値 +50\n知らんけど。' },
+  },
+  {
+    id: 'daruma',
+    name: '片目のだるま',
+    description: 'もう片方の目は、何かを成し遂げたら描く。',
+    rarity: 'R',
+    icon: '🎎',
+    sellPrice: 500,
+    usable: true,
+    sellable: true,
+    useEffect: { experience: 100, message: '両目を描いた。何かを成し遂げた気がする。経験値 +100' },
+  },
+  {
+    id: 'golden_acorn',
+    name: '金色のどんぐり',
+    description: 'リスが見たら気絶する。',
+    rarity: 'SR',
+    icon: '🌰',
+    sellPrice: 5000,
+    usable: false,
+    sellable: true,
+  },
+  {
+    id: 'old_map',
+    name: '古い地図',
+    description: 'どこかの「×」に何かがあるらしい。どこかは分からない。',
+    rarity: 'SR',
+    icon: '🗺️',
+    sellPrice: 2000,
+    usable: false,
+    sellable: true,
+  },
+  {
+    id: 'lucky_cat',
+    name: '招き猫',
+    description: '右手を上げている。お金を招くほうらしい。',
+    rarity: 'SR',
+    icon: '🐱',
+    sellPrice: 3000,
+    usable: false,
+    sellable: true,
+  },
+  {
+    id: 'tiny_meteorite',
+    name: '小さな隕石',
+    description: '宇宙から来た。たぶん。',
+    rarity: 'UR',
+    icon: '☄️',
+    sellPrice: 50000,
+    usable: false,
+    sellable: true,
+  },
+];
+
+/** 運試しで「アイテム」が当たったとき、どのレア度が出やすいか（重み） */
+export const ITEM_DROP_RARITY_WEIGHTS: Readonly<Record<Rarity, number>> = {
+  N: 700,
+  R: 220,
+  SR: 75,
+  UR: 5,
+};
+
+export const RARITY_LABEL: Readonly<Record<Rarity, string>> = {
+  N: '★',
+  R: '★★',
+  SR: '★★★',
+  UR: '★★★★',
+};
